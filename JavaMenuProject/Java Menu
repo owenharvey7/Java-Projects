@@ -1,0 +1,308 @@
+//Imports for the program
+import java.text.MessageFormat;
+import java.util.Scanner;
+import java.text.DecimalFormat;
+import java.io.*;
+
+/*
+ This program will greet the user and present a menu listing items such as drinks,
+appetizers, and a variety of food and dessert options. With the options for the user to pick items
+there will be prices attached to the food items so when an item is picked there is a monetary
+value assigned to the food item. The user will pick all the food items they want until they are
+content with their choices. There will be a choice for the user to exit the menu.
+Once the user exits the menu, they will be shown the bill. The user will have the option to
+split the bill amount multiple people if the tabs are separate. The user will enter an amount in
+which they are paying and will be able to receive change for their bill. After the user pays for
+their bill, they will be able to give feedback and rate their experience at the restaurant. They can
+rank their experience based on food, service, and overall experience.
+ */
+
+public class JavaMenuProject
+{
+
+    public static void main(String[] args)throws IOException {
+
+
+        //Create a format to round numbers to 2 decimals
+        DecimalFormat df2 = new DecimalFormat("#.##");
+
+        //Floats
+        float total = 0, payment, tip;
+        //Integers
+        int choice, service, food, experience;
+
+        //String
+        String   userName;
+        
+        //Creates comment string for special requests
+        String specialComments = " ";
+        String comment;
+        Scanner sc = new Scanner(System.in);
+
+        //Welcome message to user
+        System.out.println("Welcome to Owen's Restaurant");
+        System.out.println("----------------------------");
+
+        //Gets users name for order
+        System.out.print("Before you begin to order, could you please enter the name for this order: ");
+        userName = sc.nextLine();
+
+        //To implement scanner, file, and open file
+        PrintWriter menuInput = new PrintWriter("Receipt" +userName + ".txt");
+
+
+        //Repeats message to user on receipt
+        menuInput.println("Welcome to Owen's Restaurant");
+        menuInput.println("----------------------------");
+
+
+
+
+        //Prints the users name on receipt
+        menuInput.println(MessageFormat.format("\nOrder for {0} ", userName + ".\n"));
+
+        //Menu
+        showMenu();
+
+        /* Do while loop for the menu */
+        do {
+            System.out.print("Which item would you like to purchase?: ");
+            choice = sc.nextInt();
+
+
+            //Switch menu prices and order items
+            switch (choice) {
+                case 1 -> {
+                    total = total + 0;
+                    menuInput.print("Water,\t             $0.00\n");//Prints order to users receipt
+                }
+                case 2 -> {
+                    total = total + 1;
+                    menuInput.print("Soda,\t             $1.00\n");//Prints order to users receipt
+                }
+                case 3 -> {
+                    total = (float) (total + 4.5);
+                    menuInput.print("Nachos,\t             $4.50\n");//Prints order to users receipt
+                }
+                case 4 -> {
+                    total = (float) (total + 3.75);
+                    menuInput.print("Pretzels,\t     $3.75\n");//Prints order to users receipt
+                }
+                case 5 -> {
+                    total = (float) (total + 9.25);
+                    menuInput.print("Boneless Wings,\t     $9.25\n");//Prints order to users receipt
+                }
+                case 6 -> {
+                    total = (float) (total + 10.00);
+                    menuInput.print("Traditional Wings,   $10.00\n");//Prints order to users receipt
+                }
+                case 7 -> {
+                    total = (float) (total + 8.75);
+                    menuInput.print("Chicken Sandwich,    $8.75\n");//Prints order to users receipt
+                }
+                case 8 -> {
+                    total = (float) (total + 9.5);
+                    menuInput.print("Cheese Burger,\t     $9.50\n");//Prints order to users receipt
+                }
+                case 9 -> {
+                    total = (float) (total + 8.5);
+                    menuInput.print("Chicken Wrap,\t     $8.50\n");//Prints order to users receipt
+                }
+                case 10 -> {
+                    total = (float) (total + 2.75);
+                    menuInput.print("Ice Cream,\t     $2.75\n");//Prints order to users receipt
+                }
+
+                //Default for when the loop ends, the user receives this message
+                default ->
+                         System.out.println("\nThank you for ordering with Owen's Sports Grill we will have your order of out to you as quick as possible.\n");
+
+            }
+
+
+
+
+        }//While part of the Do While loop
+        while (choice > 0 && choice < 11);
+
+
+        sc.nextLine();
+        //If the user has any special requests
+        System.out.print("Do you have any special requests for your order? " );
+        comment = sc.nextLine();
+        if(comment.equals("yes") || comment.equals("Yes")) {
+            System.out.print("What is the special request for your order?: ");
+            specialComments = sc.nextLine();
+            menuInput.println("\n" + userName + " special requested " + specialComments + ".\n");
+
+
+
+
+
+        }
+        menuInput.println(MessageFormat.format("\nThank you {0} ", userName + " for your order!\n"));
+
+
+        //Total calculations
+        //Creates bill section in receipt
+        menuInput.println("\nBILL: ");
+
+
+
+        //Prints the total before taxes
+        System.out.println("Your total today before taxes will be $" + total + "\n");
+        menuInput.print("Your total today before taxes will be $" + total + "\n");
+
+        //Calculations for the tax
+        float totalwTax = (float) (total * 1.07);
+
+        //Total with tax
+        System.out.println("\nYour total with tax will be $" + df2.format(totalwTax) + "\n");
+        menuInput.println("Your total with tax will be $" + df2.format(totalwTax));
+
+        //Gets the tip from the user for the meal
+        System.out.print("Enter how much you would like to tip: ");
+        tip = sc.nextFloat();
+        menuInput.println("You tipped: $" + tip);
+
+        //Calculates the total w tip and tells the user
+        total = totalwTax + tip;
+        menuInput.println("Your total with your tip will be: $" + df2.format(total));
+        System.out.println("Your final total will be $" + df2.format(total));
+
+        //Prompts the user to enter payment
+        System.out.print("Enter how much you are going to pay: ");
+        payment = sc.nextFloat();
+
+        //Creates while loop for if the user doesn't pay enough
+        if(payment < total) {
+            while (total > 0) {
+                System.out.print("The amount you entered for payment is less than how much you owe, you still owe $" + df2.format(total - payment) + " Please pay the remaining amount.");
+                total = total - payment;
+                payment = sc.nextFloat();
+            }
+        }
+        //Creates argument for when the user pays for their meal
+        if (payment >= total) {
+            System.out.println("Your change for today will be $" + df2.format(payment - total));
+            menuInput.println("Your change for today will be $" + df2.format(payment - total));
+        }
+
+
+            String survey;
+            sc.nextLine();
+        //Optional survey
+        System.out.print("Would be willing to participate in a survey? ");
+        survey = sc.nextLine();
+
+        //Creates if statement for if the user would like to leave feedback about their experience
+        if(survey.equals("yes") || survey.equals("Yes")) {
+            System.out.println("Thank you for participating in our survey we just have three questions to ask you");
+            System.out.println("Please rate us on a 1-5 scale 1 being terrible and 5 being excellent: \n");
+
+            System.out.print("How would you rate your food today?: ");
+            food = sc.nextInt();
+            while (food > 5 || food < 1) {
+                System.out.print("Please enter a number 1-5: ");
+                food = sc.nextInt();
+            }
+
+            System.out.print("How would you rate your service today?: ");
+            service = sc.nextInt();
+            while (service > 5 || service < 1) {
+                System.out.print("Please enter a number 1-5: ");
+                service = sc.nextInt();
+            }
+
+            System.out.print("How would you rate your overall experience today?: ");
+            experience = sc.nextInt();
+            while (experience > 5 || experience < 1) {
+                System.out.print("Please enter a number 1-5: ");
+                experience = sc.nextInt();
+            }
+
+            //Creates feedback section of the receipt file
+            menuInput.println("\n\nFEEDBACK: ");
+
+            menuInput.println("You rated the food a " + food + "\nYou rated the service a " + service + "\nYou rated the experience a " + experience + ". ");
+
+            float score = (food + service + experience) / 3;
+
+            restaurantRating(score);
+
+            //Creates a thank-you message for the user in the receipt file
+            menuInput.println("\n\nHave a great day and thank you for ordering from Owen's Sports grill! ");
+
+            //Creates a thank-you message for the user
+            System.out.println("\n\nHave a great day and thank you for ordering from Owen's Sports grill! ");
+
+            //Closes the receipt file
+            menuInput.close();
+        }
+    }
+
+    private static void restaurantRating(float score) throws FileNotFoundException {
+
+        PrintWriter menuInput = new PrintWriter("Receipt.txt");
+
+        Scanner sc = new Scanner(System.in);
+
+        //If statements to section the rating of the users experience
+        if (score >= 4) {
+
+            System.out.println("We are glad you had a great experience! Please visit us again soon. ");
+        }
+
+        else if (3 <= score) {
+
+            System.out.print("We are sorry to hear you didn't have the best experience, is there any way we could improve?: ");
+            sc.next();
+            System.out.println("Thank you for your feedback, we appreciate your input and hope we can turn your " + score + " into a 5 next time!\n");
+        }
+        else if (score < 3) {
+
+            System.out.print("We are sorry to hear you didn't have a good experience, is there any way we could improve?: ");
+            sc.next();
+            System.out.println("Thank you for your feedback, we appreciate your input and hope we can turn your " + score + " into a 5 next time! " +
+                    "\n");
+        }else{
+           menuInput.println("Thank you for visiting Owen's Sports Grill");
+        }
+
+    }
+
+    public static void showMenu(){
+
+        //Menu
+        System.out.print("""
+                \tMenu
+                           Drinks          \s
+                    ---------------------
+                1.) Water\t             complementary!
+                2.) Soda\t             $1.00(free refills)
+                          Appetizers          \s
+                    ---------------------
+                3.) Nachos\t             $4.50
+                4.) Pretzels\t         $3.75
+                           Wings          \s
+                    ---------------------
+                5.) Boneless Wings\t     $9.25
+                6.) Traditional Wings\t $10.00
+                     Sandwiches and wraps          \s
+                      (comes with fries)          \s
+                    ---------------------
+                7.) Chicken Sandwich\t $8.75
+                8.) Cheese Burger\t     $9.50
+                9.) Chicken Wrap\t     $8.50
+                          Dessert          \s
+                    ---------------------
+                10.) Ice Cream\t         $2.75
+                    ---------------------
+                11.)         Exit       \s
+                """);
+
+
+    }
+
+}
+
