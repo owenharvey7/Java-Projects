@@ -9,7 +9,8 @@ public class SimonSays {
         int score = 0;
 
         while (true) {
-            boolean isCorrect = playRound(difficulty, score, scanner);
+            boolean isCorrect = playRound(difficulty, score, scanner); // Call play round function to go to the difficulty and get the score
+            // If statement to either show updated score or tell user they're wrong
             if (isCorrect) {
                 score++;
                 System.out.println("Correct! Your score: " + score);
@@ -21,7 +22,7 @@ public class SimonSays {
                 System.out.println("Would you like to change the difficulty? (yes/no)");
                 String changeDifficulty = scanner.nextLine();
                 if (changeDifficulty.equalsIgnoreCase("yes")) {
-                    difficulty = setDifficulty(scanner);
+                    difficulty = setDifficulty(scanner); // Calls difficulty function to get the difficulty
                 }
 
                 // Ask if the player wants to play another round
@@ -40,9 +41,10 @@ public class SimonSays {
 
     public static String setDifficulty(Scanner scanner) {
         String difficulty;
+        //Only accept easy or hard inputs
         do {
             System.out.println("Select difficulty (easy / hard): ");
-            difficulty = scanner.nextLine(); // Fix input buffer
+            difficulty = scanner.nextLine(); 
         } while (!difficulty.equalsIgnoreCase("easy") && !difficulty.equalsIgnoreCase("hard"));
         return difficulty;
     }
@@ -51,7 +53,7 @@ public class SimonSays {
     public static String lastGeneratedSequence = "";
 
     public static boolean playRound(String difficulty, int score, Scanner scanner) {
-        //clearScreen();
+    
         String sequence = showSequence(difficulty, score);  // Generates and displays the sequence
 
         waitFor(3000);  // Wait for 3 seconds before clearing the screen
@@ -67,7 +69,7 @@ public class SimonSays {
     public static String showSequence(String difficulty, int score) {
         Random random = new Random();
         StringBuilder sequence = new StringBuilder();
-        int length = Math.min(1 + score / 2, 8);  // Increase sequence length as score goes up, max length is 5
+        int length = Math.min(1 + score / 2, 8);  // Increase sequence length as the score goes up. For every 2 correct answers, the sequence will be added. The max length is 8. 
 
         System.out.println("Memorize this sequence:");
 
